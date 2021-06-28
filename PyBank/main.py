@@ -21,18 +21,18 @@ with open(csvpath, newline="") as csvfile:
 # set variables for finding net total and Month Count        
 # count the rows starting from second row
 # sum all net totals
-MnthCt = 0
-NtTtl = 0
+Mth_Count = 0
+Net_Total = 0
 for row in budget[1:]:
-    MnthCt += 1
-    NtTtl += int(row[1])
+    Mth_Count += 1
+    Net_Total += int(row[1])
     
 # make a list of only the month totals
-MnthTtl = [int(j) for i, j in budget[1:]]
+Month_Total= [int(j) for i, j in budget[1:]]
 
 # zip the month total list to itself, one index ahead for one of the lists
 # subtract Find the difference between the zipped items
-MnthChng = [x - y for x, y in zip(MnthTtl[1:], MnthTtl)]
+MnthChng = [x - y for x, y in zip(Month_Total[1:], Month_Total)]
 
 # find the average of the items in the month change list
 MnthChngAvg = sum(MnthChng) / len(MnthChng)
@@ -55,7 +55,7 @@ for row in MnthChngList:
 print("Financial Analysis")
 print("----------------------------")
 print(f"Total Months: {len(budget) - 1}")
-print(f"Total: ${NtTtl}")
+print(f"Total: ${Net_Total}")
 print(f"Average  Change: ${round(MnthChngAvg, 2)}")
 print(f"Greatest Increase in Profits: {MxMnth} (${max(MnthChng)})")
 print(f"Greatest Decrease in Profits: {MnMnth} (${min(MnthChng)})")
@@ -64,7 +64,7 @@ with open("FinancialAnalysis.txt", "a") as txt:
     txt.write("Financial Analysis/n")
     txt.write("----------------------------/n")
     txt.write(f"Total Months: {len(budget) - 1}/n")
-    txt.write(f"Total: ${NtTtl}/n")
+    txt.write(f"Total: ${Net_Total}/n")
     txt.write(f"Average  Change: ${round(MnthChngAvg, 2)}/n")
     txt.write(f"Greatest Increase in Profits: {MxMnth} (${max(MnthChng)})/n")
     txt.write(f"Greatest Decrease in Profits: {MnMnth} (${min(MnthChng)})/n")
