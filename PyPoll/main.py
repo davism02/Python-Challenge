@@ -6,7 +6,7 @@ vote_count = []
 candidates = []
 csv_reader = ['1','2']
 # Pull in data & read file
-csvpath = os.path.join("C:/Users/MDavi23/Documents/Git hub/Python-challenge/Python-challenge/pypoll/Resources/election_data.csv")
+csvpath = os.path.join(".", "Resources","election_data.csv")
 with open(csvpath) as csvfile:
     csv_reader = csv.reader(csvfile, delimiter = ',')
     next(csv_reader)

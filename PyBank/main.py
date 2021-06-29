@@ -4,8 +4,8 @@ import os
 import csv
 
 # set the file location as a variable
-csvpath = "C:/Users/MDavi23/Documents/Git hub/Python-Challenge/Python-Challenge/PyBank/Resources/budget_data.csv"
 
+csvpath =os.path.join(".","Resources", "budget_data.csv")
 # create the list variable
 budget = []
 
