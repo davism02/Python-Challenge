@@ -1,19 +1,20 @@
+#import packages to read/write csv files 
 import os
 import csv
-#Define variables
+#Creeate empty lists and variable fr storing values and calculation from data
 votes = 0
 vote_count = []
 candidates = []
 csv_reader = ['1','2']
 # Pull in data & read file
-csvpath = os.path.join(".", "Resources","election_data.csv")
+csvpath = os.path.join("Resources","election_data.csv")
 with open(csvpath) as csvfile:
     csv_reader = csv.reader(csvfile, delimiter = ',')
     next(csv_reader)
     for row in csv_reader:
         #Tally votes
         votes = votes + 1
-        #Candidates
+        #Candidates get unique candidate names and individual vote count and stor in lists
         candidate = row[2]
         #Votes per candidate
         if candidate in candidates:
@@ -47,18 +48,5 @@ print(f"Winner:  {winner}")
 print("--------------------------------")
 # 1) open a file for writing:
 f = open("poll.txt", "w")
-#2) replace all your print statements by print >>f, for example:
-# print "hello" becomes print >>f, "hello
-#3) close the file when you're done
-# f.close()
-print("REPRINT REPRINT REPRINT", file=f)
-print("Election Results", file=f)
-print("--------------------------------", file=f)
-print(f"Total Votes: {votes}", file=f)
-print("--------------------------------", file=f)
-for count in range(len(candidates)):
-    print(f"{candidates[count]}: {percentages[count]}% ({vote_count[count]})", file=f)
-print("--------------------------------", file=f)
-print(f"Winner:  {winner}", file=f)
-print("--------------------------------", file=f)
-f.close()
+
+

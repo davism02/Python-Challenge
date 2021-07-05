@@ -1,64 +1,85 @@
-import os
+# --- import packages to read/write CSV files and create dynamic paths to the I/O files ---
 import csv
-#Define variables
-votes = 0
-vote_count = []
-candidates = []
-csv_reader = ['1','2']
-# Pull in data & read file
-csvpath = os.path.join("C:/Users/MDavi23/Documents/Git hub/Python-challenge/Python-challenge/pypoll/Resources/election_data.csv")
-with open(csvpath) as csvfile:
-    csv_reader = csv.reader(csvfile, delimiter = ',')
-    next(csv_reader)
-    for row in csv_reader:
-        #Tally votes
-        votes = votes + 1
-        #Candidates
-        candidate = row[2]
-        #Votes per candidate
-        if candidate in candidates:
-           candidate_index = candidates.index(candidate)
-           vote_count[candidate_index] = vote_count[candidate_index] + 1
+import os
+
+# -- define function to fix percentage format to 3 decimal points ---
+def fixPercent(num):
+    num = "{:.3%}".format(num)
+    return num
+
+# --- define relative path for the input and output files ---
+inputfile = os.path.join("Resources", "election_data.csv")
+outputfile = os.path.join("Analysis", "pyPoll_analysis.txt")
+
+# --- create empty lists and variables for storing values and calculations from data ---
+UniqueCandidates = []
+VoteCounts = []
+VotePercent = []
+TotalVotes = 0
+WinnerCount = 0
+
+# --- read the CSV file ---
+with open(inputfile, 'r') as electiondata:
+    reader = csv.reader(electiondata, delimiter=",")
+
+    # --- store header rows into a Headers list ---
+    Headers = next(reader)
+
+    # --- for loop to go through each row in the CSV file and count the total number of votes ---
+
+    for row in reader:
+        TotalVotes += 1
+    
+        # --- get unique candidate names and individual vote counts and store in lists ---
+        # if row[2] (candidate name) is not in the UniqueCandidates list, i.e. if it is the first instance of the name
+        if row[2] not in UniqueCandidates:
+
+            #append the name to UniqueCandidates and a value of 1 to VoteCounts list
+            UniqueCandidates.append(row[2])
+            VoteCounts.append(1)
+
+        # if row[2] (candidate name) is in the UniqueCandidates list
         else:
-           candidates.append(candidate)
-           vote_count.append(1)
-#Percentages
-percentages = []
-most_votes = vote_count[0]
-most_votes_index = 0
-for count in range(len(candidates)):
-    vote_percentage = vote_count[count]/votes*100
-    percentages.append(vote_percentage)
-    if vote_count[count] > most_votes:
-        print(most_votes)
-        most_votes_index = count
-winner = candidates[most_votes_index]
-percentages = [round (i,2) for i in percentages]
-#Print results           
-print()
-print("Election Results")
-print("--------------------------------")
-print(f"Total Votes: {votes}")
-print("--------------------------------")
-for count in range(len(candidates)):
-    print(f"{candidates[count]}: {percentages[count]}% ({vote_count[count]})")
-print("--------------------------------")
-print(f"Winner:  {winner}")
-print("--------------------------------")
-# 1) open a file for writing:
-f = open("poll.txt", "w")
-#2) replace all your print statements by print >>f, for example:
-# print "hello" becomes print >>f, "hello
-#3) close the file when you're done
-# f.close()
-print("REPRINT REPRINT REPRINT", file=f)
-print("Election Results", file=f)
-print("--------------------------------", file=f)
-print(f"Total Votes: {votes}", file=f)
-print("--------------------------------", file=f)
-for count in range(len(candidates)):
-    print(f"{candidates[count]}: {percentages[count]}% ({vote_count[count]})", file=f)
-print("--------------------------------", file=f)
-print(f"Winner:  {winner}", file=f)
-print("--------------------------------", file=f)
-f.close()
+
+            # get the index of the candidate from the UniqueCandidates list in order to increase the vote count by 1
+            CandidateIndex = UniqueCandidates.index(row[2])
+            VoteCounts[CandidateIndex] += 1
+        
+
+# --- calculate percentage of votes for each candidate ---
+for i in range(len(VoteCounts)):
+    VotePercent.append(VoteCounts[i] / TotalVotes)
+
+# --- calculate the winner based on most votes ---
+for i in range(len(VoteCounts)):
+
+    # if the number of votes is greater than WinnerCount (initially zero)
+    if VoteCounts[i] > WinnerCount:
+        
+        #update WinnerCount to the number of votes at index i
+        WinnerCount = VoteCounts[i]
+
+        #update Winner to the candidate name at index i
+        Winner = UniqueCandidates[i]
+
+#--- create a text file with the analysis output ---
+with open(outputfile, 'w') as textfile:
+    textfile.write(f"Election Results\n"
+                   f"----------------------------\n"
+                   f"Total Votes: {TotalVotes}\n"
+                   f"----------------------------\n"
+                   )
+
+    # --- for loop to iteratively write each candidate's info ---
+    for i in range(len(UniqueCandidates)):
+        textfile.write(f"{UniqueCandidates[i]}: {fixPercent(VotePercent[i])} ({VoteCounts[i]})\n")
+
+    textfile.write(f"----------------------------\n"
+                   f"Winner: {Winner}\n"
+                   f"----------------------------\n"
+                  )
+
+# --- read the output file and print analysis to terminal ---
+with open (outputfile, 'r') as analysis:
+    contents = analysis.read()
+    print(contents)
