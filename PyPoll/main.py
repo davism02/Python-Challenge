@@ -49,4 +49,14 @@ print("--------------------------------")
 # 1) open a file for writing:
 f = open("poll.txt", "w")
 
+print("Election Results", file=f)
+print("--------------------------------", file=f)
+print(f"Total Votes: {votes}", file=f)
+print("--------------------------------", file=f)
+for count in range(len(candidates)):
+    print(f"{candidates[count]}: {percentages[count]}% ({vote_count[count]})", file=f)
+print("--------------------------------", file=f)
+print(f"Winner:  {winner}", file=f)
+print("--------------------------------", file=f)
+f.close()
 
